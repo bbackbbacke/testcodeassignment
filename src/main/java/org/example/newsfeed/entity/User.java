@@ -31,7 +31,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor //얘를 통해서 객체 생성하면 1번은 무조건 id, 2번은 userId, , 순서를 잘못 넣으면ㄷ ㅔ이터가 꼬일 수도 있음
 @EntityListeners(AuditingEntityListener.class)
 @ToString
 @SuperBuilder
