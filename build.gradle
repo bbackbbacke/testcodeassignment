@@ -23,8 +23,7 @@ repositories {
 
 dependencies {
     // Mockito
-    testImplementation 'org.mockito:mockito-core'
-    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:4.8.0'
     // JUnit 5
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
@@ -54,9 +53,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     // Test
-    testImplementation ('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    testImplementation ('org.springframework.boot:spring-boot-starter-test')
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
