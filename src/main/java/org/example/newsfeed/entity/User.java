@@ -1,22 +1,11 @@
 package org.example.newsfeed.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.newsfeed.dto.PasswordRequestDTO;
 import org.example.newsfeed.dto.UserRequestDTO;
@@ -27,16 +16,16 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
-@NoArgsConstructor //얘를 통해서 객체 생성하면 1번은 무조건 id, 2번은 userId, , 순서를 잘못 넣으면ㄷ ㅔ이터가 꼬일 수도 있음
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @ToString
 @SuperBuilder
 @Table(name = "user")
-public class User extends Timestamped{
+public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -59,8 +48,9 @@ public class User extends Timestamped{
     @Column
     private String comment;
 
-    @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatusEnum status; // UserStatusEnum 타입으로 변경
 
     @Column
     @Setter
@@ -80,15 +70,8 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<Post> newsfeeds = new ArrayList<>();
 
-    public void setStatus(UserStatusEnum status) {
-        if (!status.getStatus().equals(this.status)) {
-            this.status = status.getStatus();
-            this.modifyDate = LocalDateTime.now();
-        }
-    }
-
-    public User(String userId, String password, String name, String email, String comment,
-        String refreshToken, String statusChangeTime, UserStatusEnum status) {
+    @Builder
+    public User(String userId, String password, String name, String email, String comment, String refreshToken, String statusChangeTime, UserStatusEnum status) {
         this.userId = userId;
         this.password = password;
         this.name = name;
@@ -96,8 +79,15 @@ public class User extends Timestamped{
         this.comment = comment;
         this.refreshToken = refreshToken;
         this.statusChangeTime = statusChangeTime;
-        this.status = status.getStatus();
+        this.status = status; // UserStatusEnum 타입으로 설정
     }
+
+    // setStatus 메서드 제거
+    /*
+    public void setStatus(String status) {
+        this.modifyDate = LocalDateTime.now();
+    }
+    */
 
     public void updateUser(UserRequestDTO dto) {
         this.name = dto.getName();
@@ -105,12 +95,11 @@ public class User extends Timestamped{
     }
 
     public void updatePassword(PasswordRequestDTO dto, BCryptPasswordEncoder passwordEncoder) {
-
         if (passwordEncoder.matches(dto.getBeforePassword(), this.password)) {
             this.password = passwordEncoder.encode(dto.getUpdatePassword());
         } else {
             throw new InvalidPasswordException("패스워드가 일치하지 않습니다.");
         }
     }
-}
 
+}

@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUserId(userId)
             .orElseThrow(() -> new UsernameNotFoundException("Not Found " + userId));
         //
-        if (user.getStatus().equals(UserStatusEnum.WITHDRAWN.getStatus())) {
+        if (user.getStatus().equals(UserStatusEnum.WITHDRAWN.getMessage())) {
             throw new UsernameNotFoundException("User Withdrawn" + userId);
         }
 

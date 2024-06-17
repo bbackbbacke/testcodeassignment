@@ -17,7 +17,7 @@ public class UserUtil {
         User user = userRepository.findById(Id).orElseThrow(
             () -> new NullPointerException("등록되지 않은 계정입니다")
         );
-        if(user.getStatus().equals(UserStatusEnum.WITHDRAWN.getStatus())){
+        if(user.getStatus().equals(UserStatusEnum.WITHDRAWN.getMessage())){
             throw new NullPointerException("삭제된 계정입니다");
         }
         return user;
@@ -27,7 +27,7 @@ public class UserUtil {
         User user = userRepository.findByUserId(userId).orElseThrow(
             () -> new NullPointerException("등록되지 않은 계정입니다")
         );
-        if(user.getStatus().equals(UserStatusEnum.WITHDRAWN.getStatus())){
+        if(user.getStatus().equals(UserStatusEnum.WITHDRAWN.getMessage())){
             throw new NullPointerException("삭제된 계정입니다");
         }
         return user;

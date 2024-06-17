@@ -4,16 +4,22 @@ import lombok.Getter;
 
 @Getter
 public enum UserStatusEnum {
-    ACTIVE("정상 회원입니다."),
-    WITHDRAWN("탈퇴한 회원입니다.");
+    ACTIVE("ACTIVE", "정상 회원입니다."),
+    WITHDRAWN("WITHDRAWN", "탈퇴한 회원입니다.");
 
-    private final String status;
+    private final String value;
+    private final String message;
 
-    UserStatusEnum(String status) {
-        this.status = status;
+    UserStatusEnum(String value, String message) {
+        this.value = value;
+        this.message = message;
     }
 
-    public String getStatus() {
-        return status;
+    public String getValue() {
+        return value;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
