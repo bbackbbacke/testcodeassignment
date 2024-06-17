@@ -41,7 +41,7 @@ public class CommentController {
 
         ResponseEntity response;
         try {
-            Comment comment = commentService.creatComment(postId, dto, userDetails.getUser());
+            Comment comment = commentService.createComment(postId, dto, userDetails.getUser());
             response = ResponseEntity.ok(new CommentResponseDTO(comment));
         } catch (PostNotFoundException e) {
             response = ResponseEntity.ok().body(

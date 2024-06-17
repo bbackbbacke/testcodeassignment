@@ -21,7 +21,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    public Comment creatComment(Long postId, CommentRequestDTO dto, User user) {
+    public Comment createComment(Long postId, CommentRequestDTO dto, User user) {
         var newComment = dto.toEntity(user);
         Post post = postRepository.findByIdAndDeleted(postId, Boolean.FALSE)
             .orElseThrow(() -> new PostNotFoundException("해당 게시물이 존재하지 않습니다."));
@@ -62,20 +62,25 @@ public class CommentService {
     }
 
     public void deleteComment(Long commentId, User user) {
-
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다."));
 
+        // 해당 댓글의 게시물이 존재하는지 확인
         if (postRepository.findByIdAndDeleted(comment.getPost().getId(), Boolean.FALSE).isEmpty()) {
-            throw new PostNotFoundException("해당 게시물이 존재하지 않습니다."); // 게시물 삭제되어있으면 댓글 삭제x
+            throw new PostNotFoundException("해당 게시물이 존재하지 않습니다.");
         }
 
-        if (comment.getUser().getId().equals(user.getId())) {
-            commentRepository.delete(comment);
-        } else {
+        // 댓글을 작성한 사용자와 삭제 요청을 한 사용자가 같은지 확인
+        if (!comment.getUser().getId().equals(user.getId())) {
             throw new InvalidUserException("작성자가 아닙니다.");
         }
 
-        //commentRepository.deleteById(commentId);
+        // 모든 예외 상황이 아니면 댓글 삭제
+        commentRepository.delete(comment);
     }
+
+
+
+
+
 }
